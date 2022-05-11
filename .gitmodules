@@ -1,0 +1,12 @@
+[submodule "Server"]
+	path = Server
+	url = https://github.com/MrVolot/Server.git
+[submodule "ConnectionHandler"]
+	path = ConnectionHandler
+	url = https://github.com/MrVolot/ConnectionHandler.git
+[submodule "LoginServer"]
+	path = LoginServer
+	url = https://github.com/MrVolot/LoginServer.git
+[submodule "DatabaseHandler"]
+	path = DatabaseHandler
+	url = https://github.com/MrVolot/DatabaseHandler.git
