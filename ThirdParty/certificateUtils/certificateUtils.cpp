@@ -10,18 +10,29 @@
 namespace certificateUtils {
 
     std::shared_ptr<EVP_PKEY> generate_private_key(int bits) {
-        std::shared_ptr<EVP_PKEY> pkey(EVP_PKEY_new(), ::EVP_PKEY_free);
-        RSA* rsa = RSA_generate_key(bits, RSA_F4, nullptr, nullptr);
+        EVP_PKEY_CTX* pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, NULL);
+        if (!pctx) {
+            throw std::runtime_error("Failed to create EVP_PKEY_CTX");
+        }
 
-        if (!rsa) {
+        if (EVP_PKEY_keygen_init(pctx) <= 0) {
+            EVP_PKEY_CTX_free(pctx);
+            throw std::runtime_error("Failed to initialize keygen context");
+        }
+
+        if (EVP_PKEY_CTX_set_rsa_keygen_bits(pctx, bits) <= 0) {
+            EVP_PKEY_CTX_free(pctx);
+            throw std::runtime_error("Failed to set RSA keygen bits");
+        }
+
+        EVP_PKEY* raw_pkey = NULL;
+        if (EVP_PKEY_keygen(pctx, &raw_pkey) <= 0) {
+            EVP_PKEY_CTX_free(pctx);
             throw std::runtime_error("Failed to generate RSA private key");
         }
 
-        if (EVP_PKEY_assign_RSA(pkey.get(), rsa) != 1) {
-            RSA_free(rsa);
-            throw std::runtime_error("Failed to assign RSA to EVP_PKEY");
-        }
-
+        std::shared_ptr<EVP_PKEY> pkey(raw_pkey, ::EVP_PKEY_free);
+        EVP_PKEY_CTX_free(pctx);
         return pkey;
     }
 

@@ -1,5 +1,4 @@
 #pragma once
-#pragma warning(disable : 4996)
 #include <string>
 #include <openssl/x509.h>
 #include <openssl/evp.h>
