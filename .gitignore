@@ -347,3 +347,6 @@ MigrationBackup/
 
 bin/
 compile/
+dlls/
+libs_123/
+ThirdParty_123/
